@@ -16,14 +16,14 @@ const ProjectPage = () => {
   const userRole = authState.user ? authState.user.role : null;
   const currentUserId = authState.user ? authState.user.id : null;
 
-  // 1. Încărcare date (Mutată în interiorul useEffect pentru a elimina warning-ul ESLint)
+  // 1. Incarcare date (Mutata in interiorul useEffect pentru a elimina warning-ul ESLint)
   useEffect(() => {
     const loadBugs = async () => {
       setLoading(true);
       try {
-        console.log(`📥 Caut bug-uri pentru proiectul ${projectId}`);
+        console.log(`Caut bug-uri pentru proiectul ${projectId}`);
         const data = await bugApi.fetchBugsByProject(projectId);
-        console.log(`✅ Am primit ${data.length} bug-uri:`, data);
+        console.log(`Am primit ${data.length} bug-uri:`, data);
         setBugs(data);
       } catch (error) {
         console.error('Eroare la preluarea bug-urilor:', error);
@@ -37,20 +37,20 @@ const ProjectPage = () => {
     }
   }, [projectId]);
 
-  // 2. Handler pentru actualizarea unui bug în listă (folosit de BugItem)
-  // Folosim useCallback pentru a preveni re-randări inutile ale componentelor copii
+  // 2. Handler pentru actualizarea unui bug in lista (folosit de BugItem)
+  // Folosim useCallback pentru a preveni re-randari inutile ale componentelor copii
   const handleBugUpdate = useCallback((updatedBug) => {
     setBugs(prevBugs => 
       prevBugs.map(bug => bug.id === updatedBug.id ? updatedBug : bug)
     );
   }, []);
 
-  // 3. Handler pentru adăugarea unui bug nou (folosit de BugForm)
+  // 3. Handler pentru adaugarea unui bug nou (folosit de BugForm)
   const handleBugAdded = (newBug) => {
     setBugs(prevBugs => [newBug, ...prevBugs]);
   };
 
-  // 4. Logica de filtrare optimizată cu useMemo
+  // 4. Logica de filtrare optimizata cu useMemo
   const filteredBugs = useMemo(() => {
     if (!bugs) return [];
 
@@ -68,7 +68,7 @@ const ProjectPage = () => {
     }
   }, [bugs, filter, currentUserId]);
 
-  if (loading) return <div className="loading">Se încarcă detaliile proiectului...</div>;
+  if (loading) return <div className="loading">Se incarca detaliile proiectului...</div>;
 
   return (
     <div className="project-page">
@@ -76,7 +76,7 @@ const ProjectPage = () => {
         <h2>Gestionare Proiect #{projectId}</h2>
       </div>
 
-      {/* Secțiune Raportare (doar pentru Testeri) */}
+      {/* Sectiune Raportare (doar pentru Testeri) */}
       {userRole === 'TST' && (
         <section className="report-section" style={{ marginBottom: '40px' }}>
           <h3>Raportează un Bug Nou</h3>
@@ -88,7 +88,7 @@ const ProjectPage = () => {
         </section>
       )}
 
-      {/* Secțiune Listă și Filtre */}
+      {/* Sectiune Lista si Filtre */}
       <section className="bugs-section">
         <div className="section-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
           <h3>Bug-uri înregistrate ({filteredBugs.length})</h3>

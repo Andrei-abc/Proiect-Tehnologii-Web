@@ -13,7 +13,7 @@ const DashboardPage = () => {
   const fetchProjects = async () => {
     try {
       const response = await fetch('http://13.60.183.146:3001/api/projects');
-      if (!response.ok) throw new Error('Nu s-au putut încărca proiectele');
+      if (!response.ok) throw new Error('Nu s-au putut incarca proiectele');
       const result = await response.json();
       setProjects(result.data || result || []);
     } catch (error) {
@@ -30,7 +30,7 @@ const DashboardPage = () => {
   const handleAddProject = async (e) => {
     e.preventDefault();
     try {
-      // Atenție la port: trimitem la 3001 (Backend) de pe 3002 (Frontend)
+      // Atentie la port: trimitem la 3001 (Backend) de pe 3002 (Frontend)
       const response = await fetch('http://13.60.183.146:3001/api/projects', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -44,19 +44,20 @@ const DashboardPage = () => {
       const data = await response.json();
 
       if (response.ok) {
-        setProjects([...projects, data]);
+        const newProjectData = data.data || data;
+        setProjects([...projects, newProjectData]);
         setNewProject({ name: '', repository: '' });
         setShowAddForm(false);
-        alert("✅ Proiect salvat în baza de date SQLite!");
+        alert("Proiect salvat in baza de date SQLite!");
       } else {
-        alert("❌ Serverul a refuzat cererea: " + (data.error || "Eroare necunoscută"));
+        alert("Serverul a refuzat cererea: " + (data.error || "Eroare necunoscuta"));
       }
     } catch (error) {
-      alert("⚠️ Eroare de conexiune. Verifică dacă ai pornit terminalul cu serverul!");
+      alert("Eroare de conexiune. Verifica daca ai pornit terminalul cu serverul!");
     }
   };
 
-  if (loading) return <div style={{ padding: '20px' }}>Se încarcă proiectele...</div>;
+  if (loading) return <div style={{ padding: '20px' }}>Se incarca proiectele...</div>;
 
   return (
     <div style={{ padding: '20px' }}>

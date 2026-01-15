@@ -143,7 +143,7 @@ const BugItem = ({ bug: initialBug, userRole, onUpdate }) => {
         {bug.status === 'Resolved' && (
             <div style={{ marginTop: '10px', padding: '10px', backgroundColor: '#e9f7ef', borderRadius: '4px' }}>
                 <p style={{ color: '#28a745', margin: 0 }}>
-                    ✅ <strong>Rezolvat!</strong> Commit soluție: 
+                    <strong>Rezolvat!</strong> Commit solutie: 
                     <a href={bug.solutionLink} target="_blank" rel="noreferrer" style={{ marginLeft: '5px', wordBreak: 'break-all' }}>
                       {bug.solutionLink}
                     </a>

@@ -11,7 +11,7 @@ const PORT = 3001;
 
 // Middleware de baza
 app.use(cors({
-  origin: 'http://13.60.183.146:8080', // sau portul pe care rulează React
+  origin: 'http://13.60.183.146:8080', // sau portul pe care ruleaza React
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
@@ -45,7 +45,7 @@ app.use((req, res) => {
 sequelize.sync({ force: false, alter: false })
   .then(() => {
    app.listen(PORT, '0.0.0.0', () => {
-  console.log(`\n🚀 SERVER ONLINE: http://0.0.0.0:${PORT}`);
+  console.log(`\nSERVER ONLINE: http://0.0.0.0:${PORT}`);
 });
   })
   .catch(err => {
