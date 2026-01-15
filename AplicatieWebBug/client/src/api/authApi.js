@@ -1,4 +1,4 @@
-const API_URL = 'http://13.60.183.146:8080/api/auth';
+const API_URL = 'http://13.60.183.146:3001/api/auth';
 
 // Trimite credentiale la server, returneaza datele utilizatorului la succes
 export const login = async (email, password) => {

@@ -1,4 +1,4 @@
-const API_URL = 'http://13.60.183.146:8080/api/bugs';
+const API_URL = 'http://13.60.183.146:3001/api/bugs';
 
 // Preia toate bug-urile pentru un proiect dat
 export const fetchBugsByProject = async (id) => {

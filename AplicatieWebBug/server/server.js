@@ -10,7 +10,12 @@ const app = express();
 const PORT = 3001;
 
 // Middleware de baza
-app.use(cors());
+app.use(cors({
+  origin: 'http://13.60.183.146:8080',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
