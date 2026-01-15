@@ -11,7 +11,8 @@ const PORT = 3001;
 
 // Middleware de baza
 app.use(cors({
-  origin: '*',
+  origin: 'http://13.60.183.146:8080',
+  credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
@@ -44,20 +45,9 @@ app.use((req, res) => {
 // Sincronizam modelele cu baza de date si pornim serverul
 sequelize.sync({ force: false, alter: false })
   .then(() => {
-    app.listen(PORT, () => {
-      console.log(`\n🚀 SERVER ONLINE: http://localhost:${PORT}`);
-      console.log(`📁 API Endpoints:`);
-      console.log(`   - POST   /api/auth/signup`);
-      console.log(`   - POST   /api/auth/login`);
-      console.log(`   - GET    /api/auth/users`);
-      console.log(`   - GET    /api/projects`);
-      console.log(`   - POST   /api/projects`);
-      console.log(`   - GET    /api/bugs`);
-      console.log(`   - POST   /api/bugs`);
-      console.log(`   - GET    /api/bugs/project/:id`);
-      console.log(`   - PUT    /api/bugs/:id/assign`);
-      console.log(`   - PUT    /api/bugs/:id/resolve\n`);
-    });
+   app.listen(PORT, '0.0.0.0', () => {
+  console.log(`\n🚀 SERVER ONLINE: http://0.0.0.0:${PORT}`);
+});
   })
   .catch(err => {
     console.error("Eroare la sincronizare baza de date:", err);
