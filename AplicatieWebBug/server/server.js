@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const { sequelize } = require('./models');
 
 const authRoutes = require('./routes/authRoutes');
@@ -7,7 +8,7 @@ const projectRoutes = require('./routes/projectRoutes');
 const bugRoutes = require('./routes/bugRoutes');
 
 const app = express();
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
 // Middleware de baza
 app.use(cors({
@@ -35,9 +36,13 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', message: 'Server is running' });
 });
 
-// Handler 404 pentru rute necunoscute
-app.use((req, res) => {
-  res.status(404).json({ error: 'Ruta negasita' });
+// Servim fișierele statice din React build
+const staticPath = path.join(__dirname, '../client/build');
+app.use(express.static(staticPath));
+
+// Pentru rutele React, trimitem index.html (SPA fallback)
+app.get('*', (req, res) => {
+  res.sendFile(path.join(staticPath, 'index.html'));
 });
 
 
