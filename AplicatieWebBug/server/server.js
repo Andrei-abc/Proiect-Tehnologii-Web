@@ -41,7 +41,7 @@ const staticPath = path.join(__dirname, '../client/build');
 app.use(express.static(staticPath));
 
 // Pentru rutele React, trimitem index.html (SPA fallback)
-app.get('*', (req, res) => {
+app.use((req, res) => {
   res.sendFile(path.join(staticPath, 'index.html'));
 });
 
