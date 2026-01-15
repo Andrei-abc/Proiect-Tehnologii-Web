@@ -12,7 +12,7 @@ const DashboardPage = () => {
   // Preia proiectele de pe server
   const fetchProjects = async () => {
     try {
-      const response = await fetch('http://localhost:3001/api/projects');
+      const response = await fetch('http://13.60.183.146:3001/api/projects');
       if (!response.ok) throw new Error('Nu s-au putut încărca proiectele');
       const result = await response.json();
       setProjects(result.data || result || []);
@@ -31,7 +31,7 @@ const DashboardPage = () => {
     e.preventDefault();
     try {
       // Atenție la port: trimitem la 3001 (Backend) de pe 3002 (Frontend)
-      const response = await fetch('http://localhost:3001/api/projects', {
+      const response = await fetch('http://13.60.183.146:3001/api/projects', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 

@@ -11,8 +11,7 @@ const PORT = 3001;
 
 // Middleware de baza
 app.use(cors({
-  origin: 'http://13.60.183.146:8080',
-  credentials: true,
+  origin: 'http://13.60.183.146:8080', // sau portul pe care rulează React
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
