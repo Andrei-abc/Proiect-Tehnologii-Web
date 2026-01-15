@@ -106,16 +106,22 @@ const BugItem = ({ bug: initialBug, userRole, onUpdate, teamMembers = [] }) => {
                 {/* 1. Opțiuni de Alocare (doar pentru bug-uri Open) */}
                 {bug.status === 'Open' && (
                     <>
-                        <select 
-                          value={selectedAssignee} 
-                          onChange={(e) => setSelectedAssignee(e.target.value)}
-                          style={{ padding: '5px' }}
-                        >
-                            <option value="">Delegă coleg...</option>
-                            {mpMembers.map(m => <option key={m.id} value={m.id}>{m.email}</option>)}
-                        </select>
-                        <button onClick={() => handleAssign()} className="btn-primary" style={{ padding: '5px 10px' }}>Alocă</button>
-                        <button onClick={() => handleAssign(currentUserId)} style={{ background: '#17a2b8', color: 'white', border: 'none', borderRadius: '4px', padding: '5px 10px', cursor: 'pointer' }}>Alocă-mă pe mine</button>
+                        {mpMembers.length === 0 ? (
+                          <p style={{ color: '#dc3545', marginTop: '5px' }}>Nu sunt membri disponibili în echipa acestui proiect</p>
+                        ) : (
+                          <>
+                            <select 
+                              value={selectedAssignee} 
+                              onChange={(e) => setSelectedAssignee(e.target.value)}
+                              style={{ padding: '5px' }}
+                            >
+                                <option value="">Delegă coleg...</option>
+                                {mpMembers.map(m => <option key={m.id} value={m.id}>{m.email}</option>)}
+                            </select>
+                            <button onClick={() => handleAssign()} className="btn-primary" style={{ padding: '5px 10px' }}>Alocă</button>
+                            <button onClick={() => handleAssign(currentUserId)} style={{ background: '#17a2b8', color: 'white', border: 'none', borderRadius: '4px', padding: '5px 10px', cursor: 'pointer' }}>Alocă-mă pe mine</button>
+                          </>
+                        )}
                     </>
                 )}
                 

@@ -28,6 +28,8 @@ const ProjectPage = () => {
         // Obtine detalii proiect (incluand echipa)
         const projectResponse = await fetch(`${API_URL}/api/projects/${projectId}`);
         const projectData = await projectResponse.json();
+        console.log('Raspuns complet de la server:', projectData);
+        console.log('Echipa din proiect:', projectData.data?.teamMembers);
         setProject(projectData.data);
         console.log('Proiect incarcate:', projectData.data);
         
@@ -151,6 +153,7 @@ const ProjectPage = () => {
           onUpdate={handleBugUpdate}
           teamMembers={project?.teamMembers || []}
         />
+        {console.log('ProjectPage - teamMembers transmise la BugList:', project?.teamMembers)}
       </section>
     </div>
   );
