@@ -7,6 +7,7 @@ const projectRoutes = require('./routes/projectRoutes');
 const bugRoutes = require('./routes/bugRoutes');
 
 const app = express();
+const PORT = 3001;
 
 // Middleware de baza
 app.use(cors());
@@ -34,7 +35,7 @@ app.use((req, res) => {
   res.status(404).json({ error: 'Ruta negasita' });
 });
 
-const PORT = 3001;
+
 
 // Sincronizam modelele cu baza de date si pornim serverul
 sequelize.sync({ force: false, alter: false })
