@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:3001/api/projects';
+const API_URL = 'http://13.60.183.146:8080/api/projects';
 
 // Preia lista de proiecte de la server
 export const fetchProjects = async () => {

@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:3001/api/bugs';
+const API_URL = 'http://13.60.183.146:8080/api/bugs';
 
 // Preia toate bug-urile pentru un proiect dat
 export const fetchBugsByProject = async (id) => {
@@ -47,7 +47,7 @@ export const updateBugStatus = async (id, solutionLink) => {
 
 // Preia lista de utilizatori (folosita pentru alocari)
 export const fetchTeamMembers = async () => {
-  const r = await fetch('http://localhost:3001/api/auth/users');
+  const r = await fetch('http://13.60.183.146:8080/api/auth/users');
   const result = await r.json();
   return result.data || result || [];
 };
