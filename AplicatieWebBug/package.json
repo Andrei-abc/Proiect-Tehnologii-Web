@@ -1,0 +1,20 @@
+{
+  "name": "bug-tracker-app",
+  "version": "1.0.0",
+  "description": "Bug Tracking Application with React Frontend and Express Backend",
+  "private": true,
+  "scripts": {
+    "install-all": "npm install && cd client && npm install && cd ../server && npm install && cd ..",
+    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd server && npm start",
+    "client": "cd client && npm start",
+    "server-dev": "cd server && npm run dev",
+    "build": "cd client && npm run build"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
