@@ -16,7 +16,7 @@ const ProjectPage = () => {
   const userRole = authState.user ? authState.user.role : null;
   const currentUserId = authState.user ? authState.user.id : null;
 
-  // 1. Incarcare date (Mutata in interiorul useEffect pentru a elimina warning-ul ESLint)
+  // Incarcare date (Mutata in interiorul useEffect pentru a elimina warning-ul ESLint)
   useEffect(() => {
     const loadBugs = async () => {
       setLoading(true);
@@ -37,20 +37,20 @@ const ProjectPage = () => {
     }
   }, [projectId]);
 
-  // 2. Handler pentru actualizarea unui bug in lista (folosit de BugItem)
-  // Folosim useCallback pentru a preveni re-randari inutile ale componentelor copii
+  // Handler pentru actualizarea unui bug in lista (folosit de BugItem)
+
   const handleBugUpdate = useCallback((updatedBug) => {
     setBugs(prevBugs => 
       prevBugs.map(bug => bug.id === updatedBug.id ? updatedBug : bug)
     );
   }, []);
 
-  // 3. Handler pentru adaugarea unui bug nou (folosit de BugForm)
+  // Handler pentru adaugarea unui bug nou (folosit de BugForm)
   const handleBugAdded = (newBug) => {
     setBugs(prevBugs => [newBug, ...prevBugs]);
   };
 
-  // 4. Logica de filtrare optimizata cu useMemo
+  // Logica de filtrare optimizata cu useMemo
   const filteredBugs = useMemo(() => {
     if (!bugs) return [];
 
