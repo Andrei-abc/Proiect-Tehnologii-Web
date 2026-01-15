@@ -11,8 +11,9 @@ const PORT = 3001;
 
 // Middleware de baza
 app.use(cors({
-  origin: 'http://13.60.183.146:8080',
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  origin: ['http://13.48.248.52:8080', 'http://13.60.183.146:8080', 'http://localhost:3000', 'http://localhost:8080'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
