@@ -1,10 +1,13 @@
 const { Project, Bug } = require('../models');
 
-// Returneaza toate proiectele, cu numarul de bug-uri legate
+// Returneaza toate proiectele, cu numarul de bug-uri legate si echipa
 exports.getAllProjects = async (req, res) => {
   try {
     const projects = await Project.findAll({
-      include: [{ model: Bug, attributes: ['id'], required: false }]
+      include: [
+        { model: Bug, attributes: ['id'], required: false },
+        { association: 'teamMembers', attributes: ['id', 'email', 'role'], through: { attributes: [] } }
+      ]
     });
     res.json({ count: projects.length, data: projects });
   } catch (err) {
@@ -12,15 +15,26 @@ exports.getAllProjects = async (req, res) => {
   }
 };
 
-// Creeaza un proiect nou (body: name, repository, ownerId)
+// Creeaza un proiect nou (body: name, repository, ownerId, teamMembers)
 exports.createProject = async (req, res) => {
   try {
-    const { name, repository, ownerId } = req.body;
+    const { name, repository, ownerId, teamMembers } = req.body;
     if (!name) {
       return res.status(400).json({ error: "Nume proiect obligatoriu" });
     }
     const project = await Project.create({ name, repository, ownerId });
-    res.status(201).json({ message: 'Proiect creat cu succes', data: project });
+    
+    // Adauga membrii echipei daca sunt specificati
+    if (teamMembers && teamMembers.length > 0) {
+      await project.addTeamMembers(teamMembers);
+    }
+    
+    // Reincarca proiectul cu membrii echipei
+    const fullProject = await Project.findByPk(project.id, {
+      include: [{ association: 'teamMembers', attributes: ['id', 'email', 'role'], through: { attributes: [] } }]
+    });
+    
+    res.status(201).json({ message: 'Proiect creat cu succes', data: fullProject });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
@@ -30,7 +44,10 @@ exports.createProject = async (req, res) => {
 exports.getProjectById = async (req, res) => {
   try {
     const project = await Project.findByPk(req.params.id, {
-      include: [{ model: Bug, required: false }]
+      include: [
+        { model: Bug, required: false },
+        { association: 'teamMembers', attributes: ['id', 'email', 'role'], through: { attributes: [] } }
+      ]
     });
     if (!project) {
       return res.status(404).json({ error: "Proiect negasit" });

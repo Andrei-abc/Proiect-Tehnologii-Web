@@ -40,5 +40,10 @@ Bug.belongsTo(Project, { foreignKey: 'ProjectId' });
 Bug.belongsTo(User, { as: 'reporter', foreignKey: 'reporterId' });
 Bug.belongsTo(User, { as: 'assignedTo', foreignKey: 'assignedToId' });
 
+// Relatie many-to-many intre Projects si Users pentru echipa
+const ProjectTeam = sequelize.define('ProjectTeam', {});
+Project.belongsToMany(User, { through: ProjectTeam, as: 'teamMembers' });
+User.belongsToMany(Project, { through: ProjectTeam, as: 'projects' });
+
 // Exportam modelele si conexiunea la DB
-module.exports = { User, Project, Bug, sequelize };
+module.exports = { User, Project, Bug, ProjectTeam, sequelize };

@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../App';
+import * as projectApi from '../api/projectApi';
+import API_URL from '../config';
 
 const DashboardPage = () => {
   const { authState } = useAuth();
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
-  const [newProject, setNewProject] = useState({ name: '', repository: '' });
+  const [users, setUsers] = useState([]);
+  const [newProject, setNewProject] = useState({ name: '', repository: '', teamMembers: [] });
 
   // Preia proiectele de pe server
   const fetchProjects = async () => {
     try {
-      const response = await fetch('http://13.60.183.146:3001/api/projects');
+      const response = await fetch(`${API_URL}/api/projects`);
       if (!response.ok) throw new Error('Nu s-au putut incarca proiectele');
       const result = await response.json();
       setProjects(result.data || result || []);
@@ -23,21 +26,35 @@ const DashboardPage = () => {
     }
   };
 
+  // Preia lista de utilizatori pentru a le selecta in echipa
+  const fetchUsers = async () => {
+    try {
+      const response = await fetch(`${API_URL}/api/auth/users`);
+      if (!response.ok) throw new Error('Nu s-au putut incarca utilizatorii');
+      const result = await response.json();
+      setUsers(result.data || result || []);
+    } catch (error) {
+      console.error('Eroare la incarcarea utilizatorilor:', error);
+    }
+  };
+
   useEffect(() => {
     fetchProjects();
+    fetchUsers();
   }, []);
 
   const handleAddProject = async (e) => {
     e.preventDefault();
     try {
-      // Atentie la port: trimitem la 3001 (Backend) de pe 3002 (Frontend)
-      const response = await fetch('http://13.60.183.146:3001/api/projects', {
+      // Atentie la port: trimitem la API_URL (care se adapteaza la local sau AWS)
+      const response = await fetch(`${API_URL}/api/projects`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           name: newProject.name, 
           repository: newProject.repository,
-          ownerId: authState.user ? authState.user.id : null 
+          ownerId: authState.user ? authState.user.id : null,
+          teamMembers: newProject.teamMembers
         })
       });
 
@@ -46,7 +63,7 @@ const DashboardPage = () => {
       if (response.ok) {
         const newProjectData = data.data || data;
         setProjects([...projects, newProjectData]);
-        setNewProject({ name: '', repository: '' });
+        setNewProject({ name: '', repository: '', teamMembers: [] });
         setShowAddForm(false);
         alert("Proiect salvat in baza de date SQLite!");
       } else {
@@ -54,6 +71,20 @@ const DashboardPage = () => {
       }
     } catch (error) {
       alert("Eroare de conexiune. Verifica daca ai pornit terminalul cu serverul!");
+    }
+  };
+
+  const handleDeleteProject = async (projectId, projectName) => {
+    if (!window.confirm(`Ești sigur că vrei să ștergi proiectul "${projectName}"? Aceasta va șterge și toate bug-urile asociate!`)) {
+      return;
+    }
+
+    try {
+      await projectApi.deleteProject(projectId);
+      setProjects(projects.filter(p => p.id !== projectId));
+      alert("Proiect șters cu succes!");
+    } catch (error) {
+      alert(`Eroare la ștergerea proiectului: ${error.message}`);
     }
   };
 
@@ -93,6 +124,27 @@ const DashboardPage = () => {
                 required 
               />
             </div>
+            <div style={{ marginBottom: '15px' }}>
+              <label>Echipa Proiect:</label>
+              <div style={{ marginTop: '8px', maxHeight: '150px', overflowY: 'auto', border: '1px solid #ddd', padding: '10px', borderRadius: '4px' }}>
+                {users.map(user => (
+                  <label key={user.id} style={{ display: 'block', marginBottom: '8px', cursor: 'pointer' }}>
+                    <input 
+                      type="checkbox"
+                      checked={newProject.teamMembers.includes(user.id)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setNewProject({...newProject, teamMembers: [...newProject.teamMembers, user.id]});
+                        } else {
+                          setNewProject({...newProject, teamMembers: newProject.teamMembers.filter(id => id !== user.id)});
+                        }
+                      }}
+                    />
+                    {' '} {user.email} ({user.role})
+                  </label>
+                ))}
+              </div>
+            </div>
             <button type="submit" className="btn-primary" style={{ width: '100%', padding: '10px' }}>
               Salvează în Baza de Date
             </button>
@@ -108,6 +160,21 @@ const DashboardPage = () => {
             </Link>
             <p style={{ fontSize: '0.85em', color: '#666' }}>ID Proiect: {p.id}</p>
             <p style={{ fontSize: '0.85em', color: '#666' }}>Repo: {p.repository}</p>
+            <div style={{ marginTop: '10px', display: 'flex', gap: '10px' }}>
+              <Link to={`/project/${p.id}`} style={{ flex: 1 }}>
+                <button style={{ width: '100%', padding: '8px', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>
+                  Deschide
+                </button>
+              </Link>
+              {authState.user && authState.user.id === p.ownerId && (
+                <button 
+                  onClick={() => handleDeleteProject(p.id, p.name)}
+                  style={{ padding: '8px 12px', backgroundColor: '#dc3545', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                >
+                  Șterge
+                </button>
+              )}
+            </div>
           </div>
         ))}
       </div>

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAuth } from '../App';
 import * as bugApi from '../api/bugApi';
+import API_URL from '../config';
 import BugForm from '../components/BugForm';
 import BugList from '../components/BugList';
 
@@ -10,6 +11,7 @@ const ProjectPage = () => {
   const { projectId } = useParams();
   const { authState } = useAuth();
   const [bugs, setBugs] = useState([]);
+  const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('ALL'); 
 
@@ -18,22 +20,30 @@ const ProjectPage = () => {
 
   // Incarcare date (Mutata in interiorul useEffect pentru a elimina warning-ul ESLint)
   useEffect(() => {
-    const loadBugs = async () => {
+    const loadData = async () => {
       setLoading(true);
       try {
-        console.log(`Caut bug-uri pentru proiectul ${projectId}`);
+        console.log(`Caut bug-uri si detalii pentru proiectul ${projectId}`);
+        
+        // Obtine detalii proiect (incluand echipa)
+        const projectResponse = await fetch(`${API_URL}/api/projects/${projectId}`);
+        const projectData = await projectResponse.json();
+        setProject(projectData.data);
+        console.log('Proiect incarcate:', projectData.data);
+        
+        // Obtine bug-uri
         const data = await bugApi.fetchBugsByProject(projectId);
         console.log(`Am primit ${data.length} bug-uri:`, data);
         setBugs(data);
       } catch (error) {
-        console.error('Eroare la preluarea bug-urilor:', error);
+        console.error('Eroare la preluarea datelor:', error);
       } finally {
         setLoading(false);
       }
     };
 
     if (projectId) {
-      loadBugs();
+      loadData();
     }
   }, [projectId]);
 
@@ -138,7 +148,8 @@ const ProjectPage = () => {
           bugs={filteredBugs} 
           projectId={projectId} 
           userRole={userRole} 
-          onUpdate={handleBugUpdate} 
+          onUpdate={handleBugUpdate}
+          teamMembers={project?.teamMembers || []}
         />
       </section>
     </div>

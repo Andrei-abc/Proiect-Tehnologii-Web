@@ -4,7 +4,7 @@ import React from 'react';
 import BugItem from './BugItem'; 
 
 // Lista de bug-uri. Primeste onUpdate pentru a propaga modificarile din copii
-const BugList = ({ bugs, projectId, userRole, onUpdate }) => { 
+const BugList = ({ bugs, projectId, userRole, onUpdate, teamMembers }) => { 
 
   if (bugs.length === 0) {
     return <p style={{ textAlign: 'center', marginTop: '30px', color: '#6c757d' }}>
@@ -20,7 +20,8 @@ const BugList = ({ bugs, projectId, userRole, onUpdate }) => {
           bug={bug} 
           projectId={projectId} 
           userRole={userRole}
-          onUpdate={onUpdate} // transmite schimbarea catre parinte
+          onUpdate={onUpdate}
+          teamMembers={teamMembers}
         />
       ))}
     </div>

@@ -3,27 +3,23 @@ import * as bugApi from '../api/bugApi';
 import { useAuth } from '../App'; 
 
 // Componenta pentru afisarea unui bug si actiuni posibile
-const BugItem = ({ bug: initialBug, userRole, onUpdate }) => { 
+const BugItem = ({ bug: initialBug, userRole, onUpdate, teamMembers = [] }) => { 
   const { authState } = useAuth(); 
   const currentUserId = authState.user ? authState.user.id : null;
 
   // State local pentru bug, membri echipa si campuri de formular
   const [bug, setBug] = useState(initialBug);
-  const [teamMembers, setTeamMembers] = useState([]);
   const [selectedAssignee, setSelectedAssignee] = useState('');
   const [resolutionCommit, setResolutionCommit] = useState('');
 
-  // Daca userul are rol MP si bug-ul e Open, preluam membrii echipei
+  // Filtram doar membrii MP din echipa proiectului
+  const mpMembers = teamMembers.filter(m => m.role === 'MP');
+  
+  // Debug: log echipa incarcata
   useEffect(() => {
-    if (userRole === 'MP' && bug.status === 'Open') {
-      bugApi.fetchTeamMembers()
-        .then(members => {
-          // Pastram doar MP pentru lista de alocari
-          setTeamMembers(members.filter(m => m.role === 'MP')); 
-        })
-        .catch(err => console.error("Eroare la incarcarea membrilor:", err));
-    }
-  }, [userRole, bug.status]);
+    console.log('BugItem - teamMembers incarcate:', teamMembers);
+    console.log('BugItem - mpMembers filtrate:', mpMembers);
+  }, [teamMembers, mpMembers]);
 
   // Afiseaza email-ul persoanei alocate sau mesaj default
   const getAssigneeDisplay = () => {
@@ -116,7 +112,7 @@ const BugItem = ({ bug: initialBug, userRole, onUpdate }) => {
                           style={{ padding: '5px' }}
                         >
                             <option value="">Delegă coleg...</option>
-                            {teamMembers.map(m => <option key={m.id} value={m.id}>{m.email}</option>)}
+                            {mpMembers.map(m => <option key={m.id} value={m.id}>{m.email}</option>)}
                         </select>
                         <button onClick={() => handleAssign()} className="btn-primary" style={{ padding: '5px 10px' }}>Alocă</button>
                         <button onClick={() => handleAssign(currentUserId)} style={{ background: '#17a2b8', color: 'white', border: 'none', borderRadius: '4px', padding: '5px 10px', cursor: 'pointer' }}>Alocă-mă pe mine</button>

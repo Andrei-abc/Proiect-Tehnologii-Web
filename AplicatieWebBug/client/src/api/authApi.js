@@ -1,8 +1,10 @@
-const API_URL = 'http://13.60.183.146:3001/api/auth';
+import API_URL from '../config';
+
+const AUTH_API_URL = `${API_URL}/api/auth`;
 
 // Trimite credentiale la server, returneaza datele utilizatorului la succes
 export const login = async (email, password) => {
-  const response = await fetch(`${API_URL}/login`, {
+  const response = await fetch(`${AUTH_API_URL}/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password })
@@ -17,7 +19,7 @@ export const login = async (email, password) => {
 
 // Creeaza cont nou pe server
 export const signup = async (email, password, role) => {
-  const response = await fetch(`${API_URL}/signup`, {
+  const response = await fetch(`${AUTH_API_URL}/signup`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password, role })
