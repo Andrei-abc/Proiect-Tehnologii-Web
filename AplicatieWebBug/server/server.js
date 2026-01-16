@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 3001;
 
 // Middleware de baza
 app.use(cors({
-  origin: ['http://13.60.196.124:8080'],
+  origin: ['http://13.60.196.124:8080','http://13.60.196.124:8080'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
