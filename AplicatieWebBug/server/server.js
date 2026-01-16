@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 3001;
 
 // Middleware de baza
 app.use(cors({
-  origin: ['https://proiect-tehnologii-web-1-an1f.onrender.com', 'http://13.48.248.52:8080', 'http://13.60.183.146:8080', 'http://localhost:3000', 'http://localhost:8080'],
+  origin: ['http://13.60.196.124:8080'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
